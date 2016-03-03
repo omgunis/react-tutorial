@@ -244,6 +244,7 @@ var data = [
 ];
 
 ReactDOM.render(
+  // data getting pulled froms comments.js files in folder, data is put there through server
   <CommentBox url="/api/comments" pollInterval={2000} />,
   document.getElementById('content')
 );
