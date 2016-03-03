@@ -171,7 +171,7 @@ var CommentBox = React.createClass({
       <div className="commentBox">
         Hello, world! I am a commentBox.
         <h1>Comments</h1>
-        <CommentList />
+        <CommentList data={this.props.data} />
         <CommentForm />
       </div>
     );
@@ -206,6 +206,6 @@ var data = [
 ];
 
 ReactDOM.render(
-  <CommentBox />,
+  <CommentBox data={data} />,
   document.getElementById('content')
 );
