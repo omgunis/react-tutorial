@@ -146,13 +146,23 @@
 // );
 
 var Comment = React.createClass({
+  rawMarkup: function() {
+    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+    return { __html: rawMarkup };
+  },
   render: function() {
     return (
       <div className="comment">
-        <h2></h2>
+        <h2 className="commentAuthor">
+          {this.props.author}
+        </h2>
+          // {this.props.children}
+          // {marked(this.props.children.toString())}
+          <span dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     );
   }
+
 });
 
 var CommentBox = React.createClass({
@@ -168,16 +178,13 @@ var CommentBox = React.createClass({
   }
 });
 
-ReactDOM.render(
-  <CommentBox />,
-  document.getElementById('content')
-);
 
 var CommentList = React.createClass({
   render: function() {
     return (
       <div className="commentList">
-        Hello, world! I am a CommentList.
+        <Comment author="Pete Hunt">This is a comment</Comment>
+        <Comment author="Jordan Walke">This is a *another* comment</Comment>
       </div>
     );
   }
@@ -192,3 +199,13 @@ var CommentForm = React.createClass({
     );
   }
 });
+
+var data = [
+  {id: 1, author: "Pete Hunt", text: "This is one comment"},
+  {id: 2, author: "Jordan Walke", text: "This is *another* comment"}
+];
+
+ReactDOM.render(
+  <CommentBox />,
+  document.getElementById('content')
+);
