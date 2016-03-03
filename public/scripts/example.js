@@ -181,6 +181,17 @@ var CommentBox = React.createClass({
       }.bind(this)
     });
   },
+  handleCommentSubmit: function(comment) {
+    $.ajax({
+      url: this.props.url,
+      dataType: "json",
+      type: "POST",
+      data: comment,
+      success: funciton(data) {
+        this.setState({data: data});
+      }.bind(this)
+    });
+  },
   getInitialState: function(){
     return {data: []};
   },
@@ -232,15 +243,28 @@ var CommentForm = React.createClass({
   getInitialState: function() {
     return {author: "", text: ""}
   },
-  handleAuthorChange: function() {
+  handleAuthorChange: function(e) {
     this.setState({author: e.target.value});
   },
-  handleTextChange: function() {
+  handleTextChange: function(e) {
     this.setState({text: e.target.value});
+  },
+  handleSubmit: function(e) {
+    //prevents broswer default action to submitting to form
+    e.preventDefault();
+    var author = this.state.author.trim();
+    var text = this.state.text.trim();
+    if (!text || !author) {
+      return;
+    }
+    this.props.onCommentSubmit({author: author, text: text});
+    this.setState({author: "", text: ""});
   },
   render: function() {
     return (
-      <div className="commentForm">
+      // <div className="commentForm">
+      // onSumbit clears form
+      <form className="commentForm" onSubmit={this.handleSubmit}>
         // Hello, world! I am a CommentForm.
         <input
           type="text"
@@ -255,7 +279,7 @@ var CommentForm = React.createClass({
           onChange={this.handleTextChange}
         />
         <input type="submit" value="Post" />
-      </div>
+      </form>
     );
   }
 });
