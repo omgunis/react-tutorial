@@ -166,8 +166,20 @@ var Comment = React.createClass({
 });
 
 var CommentBox = React.createClass({
+  // executes exactly once during the lifecycle of the components
+  // and sets up the initial state of the component
   getInitialState: function(){
     return {data: []};
+  },
+  componentDidMount: function(){
+    $.ajax({
+      url: this.props.url,
+      dataType: "json",
+      cache: false,
+      success: function(data){
+        this.setState({data: data});
+      }.bind(this)
+    });
   },
   render: function() {
     return (
