@@ -168,18 +168,33 @@ var Comment = React.createClass({
 var CommentBox = React.createClass({
   // executes exactly once during the lifecycle of the components
   // and sets up the initial state of the component
-  getInitialState: function(){
-    return {data: []};
-  },
-  componentDidMount: function(){
+  loadCommentsFromServer: function() {
     $.ajax({
       url: this.props.url,
       dataType: "json",
       cache: false,
-      success: function(data){
+      success: function(data) {
         this.setState({data: data});
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
+  },
+  getInitialState: function(){
+    return {data: []};
+  },
+  componentDidMount: function(){
+    this.loadCommentsFromServer();
+    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    // $.ajax({
+    //   url: this.props.url,
+    //   dataType: "json",
+    //   cache: false,
+    //   success: function(data){
+    //     this.setState({data: data});
+    //   }.bind(this)
+    // });
   },
   render: function() {
     return (
@@ -229,6 +244,6 @@ var data = [
 ];
 
 ReactDOM.render(
-  <CommentBox url="/api/comments" />,
+  <CommentBox url="/api/comments" pollInterval={2000} />,
   document.getElementById('content')
 );
